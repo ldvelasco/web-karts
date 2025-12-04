@@ -1,0 +1,11 @@
+# WEB - KARTS
+
+# 1. Clona el repositorio
+git clone https://github.com/ldvelasco/web-karts.git
+cd web-karts
+
+# 2. Instala las dependencias
+npm install
+
+# 3. Ejecuta en modo desarrollo
+npm run dev
