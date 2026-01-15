@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario - Karts</title>
+</head>
+<body>
+
+    <h1>📝 Crear Nueva Cuenta (KARTS-SEG-002)</h1>
+    <hr>
+
+    <div id="message-box" style="display: none; margin-bottom: 15px; font-weight: bold;"></div>
+
+    <form id="register-form">
+        <fieldset>
+            <legend>Datos Personales</legend>
+            
+            <label for="fullName">Nombre Completo:</label><br>
+            <input type="text" id="fullName" name="fullName" required placeholder="Tu nombre y apellido" style="width: 250px;">
+            <br><br>
+
+            <label for="email">Correo Electrónico:</label><br>
+            <input type="email" id="email" name="email" required placeholder="usuario@email.com" style="width: 250px;">
+            <br><br>
+
+            <label for="password">Contraseña:</label><br>
+            <input type="password" id="password" name="password" required placeholder="Mínimo 6 caracteres" minlength="6" style="width: 250px;">
+            <br><br>
+
+            <label for="confirmPassword">Confirmar Contraseña:</label><br>
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Repite la contraseña" style="width: 250px;">
+            <br><br>
+
+            <button type="submit" id="btn-submit" style="padding: 10px 20px; cursor: pointer;">REGISTRARSE</button>
+        </fieldset>
+    </form>
+
+    <p><small>¿Ya tienes cuenta? <a href="index.html">Inicia sesión aquí</a></small></p>
+
+<script>
+    /**
+     * CONFIGURACIÓN
+     * Apunta al endpoint de registro del Backend.
+     */
+    const API_REGISTER_URL = 'http://localhost:3000/api/auth/register';
+
+    // Elementos DOM
+    const form = document.getElementById('register-form');
+    const msgBox = document.getElementById('message-box');
+    const btnSubmit = document.getElementById('btn-submit');
+
+    /**
+     * LÓGICA DE REGISTRO
+     */
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // 1. Obtener valores
+        const name = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+
+        // 2. Validación Frontend: ¿Coinciden las contraseñas?
+        if (pass !== confirmPass) {
+            showMessage("Las contraseñas no coinciden.", "red");
+            return;
+        }
+
+        // 3. Preparar UI (Bloquear botón)
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Creando cuenta...";
+        showMessage("", "black", false); // Limpiar mensajes
+
+        try {
+            // 4. Petición POST al Backend
+            const response = await fetch(API_REGISTER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: pass
+                })
+            });
+
+            // 5. Manejar respuesta
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Error al registrar usuario');
+            }
+
+            // 6. ÉXITO
+            showMessage("¡Cuenta creada con éxito! Redirigiendo al login...", "green");
+            
+            // Esperar 2 segundos y mandar al Login
+            setTimeout(() => {
+                window.location.href = 'index.html'; // O login.html según como lo llamaste
+            }, 2000);
+
+        } catch (error) {
+            // 7. Error
+            let errorText = error.message;
+            if (errorText === 'Failed to fetch') {
+                errorText = "No hay conexión con el servidor.";
+            }
+            showMessage("⚠️ " + errorText, "red");
+            
+            // Restaurar botón
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = "REGISTRARSE";
+        }
+    });
+
+    // Función auxiliar para mensajes
+    function showMessage(text, color, visible = true) {
+        msgBox.textContent = text;
+        msgBox.style.color = color;
+        msgBox.style.display = visible ? 'block' : 'none';
+    }
+
+</script>
+</body>
+</html>
