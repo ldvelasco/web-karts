@@ -35,6 +35,13 @@ h1 {
   line-height: 1.1;
 }
 
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
