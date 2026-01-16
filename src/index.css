@@ -1,68 +1,201 @@
+/* =========================================
+   CONFIGURACIÓN GLOBAL Y VARIABLES
+   ========================================= */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
+  padding: 20px;
+  background-color: #121212; /* Fondo oscuro principal */
+  color: #e0e0e0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
 }
 
+/* =========================================
+   TIPOGRAFÍA Y ELEMENTOS GENERALES
+   ========================================= */
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  color: #ff5722; /* Color primario (naranja) */
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
 }
 
-button {
+h3 {
+  color: #888;
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #333;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
+}
+
+/* =========================================
+   LAYOUT Y CONTENEDORES
+   ========================================= */
+/* Contenedor principal del formulario */
+form#booking-form {
+  background-color: #1e1e1e;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Secciones del formulario */
+fieldset {
+  border: 1px solid #444;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #252525;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+legend {
+  color: #ff5722;
+  font-weight: bold;
+  padding: 0 10px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   CONTROLES DE FORMULARIO
+   ========================================= */
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #bbb;
+  font-weight: 500;
+}
+
+/* Estilos para Selects e Inputs de fecha */
+select, input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+select:focus, input:focus {
+  border-color: #ff5722;
+  background-color: #404040;
+}
+
+select:disabled, input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   LISTA DE HORARIOS (GRID SYSTEM)
+   ========================================= */
+#slots-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+#slots-container li {
+  background-color: #333;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+#slots-container li:hover {
+  background-color: #444;
+  border-color: #666;
+}
+
+#slots-container li label {
+  cursor: pointer;
+  padding: 10px;
+  margin: 0;
+  font-size: 0.9rem;
+  color: white;
+  display: block;
+}
+
+/* =========================================
+   BOTONES
+   ========================================= */
+button#btn-submit {
+  width: 100%;
+  padding: 15px;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: transform 0.2s, background-color 0.2s;
+  margin-top: 10px;
+}
+
+button#btn-submit:hover:not(:disabled) {
+  background-color: #ff3d00;
+  transform: translateY(-2px);
+}
+
+button#btn-submit:disabled {
+  background-color: #555;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   COMPONENTES DE UI Y FEEDBACK
+   ========================================= */
+#status-message {
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Área de log de depuración */
+pre#debug-log {
+  background-color: black;
+  color: #0f0; /* Estilo terminal */
+  padding: 15px;
+  border-radius: 6px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  width: 100%;
+  max-width: 560px;
+  height: 150px;
+  overflow-y: auto;
+  border: 1px solid #333;
+  margin-top: 10px;
 }
