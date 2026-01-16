@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-// Si usas React Router, descomenta:
-// import { useNavigate } from 'react-router-dom';
-// import { Link } from 'react-router-dom';
 
 const Register = () => {
-    // 1. Estado único para el formulario (más limpio que variables separadas)
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -12,16 +8,23 @@ const Register = () => {
         confirmPassword: ''
     });
 
-    // Estados de UI
-    const [message, setMessage] = useState({ text: '', type: '' }); // type: 'error' | 'success'
+    const [message, setMessage] = useState({ text: '', type: '' });
     const [isLoading, setIsLoading] = useState(false);
-
-    // Si usas React Router:
-    // const navigate = useNavigate();
 
     const API_REGISTER_URL = 'http://localhost:3000/api/auth/register';
 
-    // Manejador genérico para todos los inputs
+    // --- NUEVO: FUNCIÓN DE VALIDACIÓN DE SEGURIDAD ---
+    const validatePasswordSecurity = (password) => {
+        // Regex: Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número
+        const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        
+        if (!regex.test(password)) {
+            return "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.";
+        }
+        return null; // Null significa que no hay error, es válida
+    };
+    // -------------------------------------------------
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -32,25 +35,30 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage({ text: "", type: "" });
 
-        // 2. Validación Frontend: Contraseñas
+        // 1. Validación: Coincidencia de contraseñas
         if (formData.password !== formData.confirmPassword) {
             setMessage({ text: "Las contraseñas no coinciden.", type: 'error' });
             return;
         }
 
+        // 2. NUEVO: Validación de Seguridad (Fuerte)
+        const securityError = validatePasswordSecurity(formData.password);
+        if (securityError) {
+            setMessage({ text: securityError, type: 'error' });
+            return; // Detenemos el proceso si la contraseña es débil
+        }
+
         // 3. Preparar UI
         setIsLoading(true);
-        setMessage({ text: "", type: "" });
 
         try {
             const response = await fetch(API_REGISTER_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: formData.fullName, // Mapeamos 'fullName' a 'name' como espera tu API
+                    name: formData.fullName,
                     email: formData.email,
                     password: formData.password
                 })
@@ -62,25 +70,19 @@ const Register = () => {
                 throw new Error(data.message || 'Error al registrar usuario');
             }
 
-            // 4. ÉXITO
-            setMessage({ text: "¡Cuenta creada con éxito! Redirigiendo al login...", type: 'success' });
-
-            // Esperar 2 segundos y redirigir
+            // ÉXITO
+            setMessage({ text: "¡Cuenta creada con éxito! Redirigiendo...", type: 'success' });
+            
             setTimeout(() => {
-                // Opción A: React Router
-                // navigate('/login'); // o navigate('/');
-
-                // Opción B: Recarga clásica (para coincidir con tu HTML original)
                 window.location.href = 'index.html'; 
             }, 2000);
 
         } catch (error) {
             let errorText = error.message;
-            if (errorText === 'Failed to fetch') {
-                errorText = "No hay conexión con el servidor.";
-            }
+            if (errorText === 'Failed to fetch') errorText = "No hay conexión con el servidor.";
+            
             setMessage({ text: "⚠️ " + errorText, type: 'error' });
-            setIsLoading(false); // Solo restauramos el botón si falló
+            setIsLoading(false);
         }
     };
 
@@ -106,60 +108,42 @@ const Register = () => {
                     
                     <label htmlFor="fullName">Nombre Completo:</label><br />
                     <input 
-                        type="text" 
-                        id="fullName" 
-                        name="fullName" 
-                        required 
-                        placeholder="Tu nombre y apellido" 
-                        style={{ width: '250px' }}
-                        value={formData.fullName}
-                        onChange={handleChange}
+                        type="text" id="fullName" name="fullName" required 
+                        placeholder="Tu nombre y apellido" style={{ width: '250px' }}
+                        value={formData.fullName} onChange={handleChange}
                     />
                     <br /><br />
 
                     <label htmlFor="email">Correo Electrónico:</label><br />
                     <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        required 
-                        placeholder="usuario@email.com" 
-                        style={{ width: '250px' }}
-                        value={formData.email}
-                        onChange={handleChange}
+                        type="email" id="email" name="email" required 
+                        placeholder="usuario@email.com" style={{ width: '250px' }}
+                        value={formData.email} onChange={handleChange}
                     />
                     <br /><br />
 
+                    {/* Nota visual para el usuario sobre la seguridad */}
                     <label htmlFor="password">Contraseña:</label><br />
+                    <span style={{ fontSize: '0.8em', color: '#666' }}>
+                        (Mín. 8 caracteres, 1 mayúscula, 1 número)
+                    </span><br />
                     <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        required 
-                        placeholder="Mínimo 6 caracteres" 
-                        minLength="6" 
+                        type="password" id="password" name="password" required 
                         style={{ width: '250px' }}
-                        value={formData.password}
-                        onChange={handleChange}
+                        value={formData.password} onChange={handleChange}
                     />
                     <br /><br />
 
                     <label htmlFor="confirmPassword">Confirmar Contraseña:</label><br />
                     <input 
-                        type="password" 
-                        id="confirmPassword" 
-                        name="confirmPassword" 
-                        required 
-                        placeholder="Repite la contraseña" 
+                        type="password" id="confirmPassword" name="confirmPassword" required 
                         style={{ width: '250px' }}
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
+                        value={formData.confirmPassword} onChange={handleChange}
                     />
                     <br /><br />
 
                     <button 
-                        type="submit" 
-                        disabled={isLoading}
+                        type="submit" disabled={isLoading}
                         style={{ padding: '10px 20px', cursor: isLoading ? 'not-allowed' : 'pointer' }}
                     >
                         {isLoading ? "Creando cuenta..." : "REGISTRARSE"}
@@ -167,10 +151,7 @@ const Register = () => {
                 </fieldset>
             </form>
 
-            <p>
-                <small>¿Ya tienes cuenta? <a href="index.html">Inicia sesión aquí</a></small>
-                {/* Si usas Router: <Link to="/login">Inicia sesión aquí</Link> */}
-            </p>
+            <p><small>¿Ya tienes cuenta? <a href="index.html">Inicia sesión aquí</a></small></p>
         </div>
     );
 };
