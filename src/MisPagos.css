@@ -1,0 +1,119 @@
+/* MyPayments.css - Estilo Dark Racing */
+
+/* Contenedor Principal */
+.payments-container {
+  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212; /* Fondo oscuro */
+  color: #e0e0e0;
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Títulos */
+.payments-title {
+  color: #ff5722; /* Naranja Racing */
+  text-transform: uppercase;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* Mensajes de Carga y Error */
+.loading-msg, .error-msg, .empty-msg {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  border: 1px dashed #444;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.error-msg {
+  color: #ff4444;
+  border-color: #ff4444;
+}
+
+/* Tabla de Pagos */
+.table-wrapper {
+  overflow-x: auto; /* Para que no se rompa en celular */
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1e1e1e;
+}
+
+.payments-table th {
+  background-color: #252525;
+  color: #ff5722;
+  text-align: left;
+  padding: 15px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.payments-table td {
+  padding: 15px;
+  border-bottom: 1px solid #333;
+}
+
+.payments-table tr:hover {
+  background-color: #2a2a2a; /* Efecto al pasar el mouse */
+}
+
+/* Badges (Etiquetas de estado) */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-completed {
+  background-color: rgba(0, 255, 0, 0.1);
+  color: #00e676;
+  border: 1px solid #00e676;
+}
+
+.status-pending {
+  background-color: rgba(255, 165, 0, 0.1);
+  color: #ffab40;
+  border: 1px solid #ffab40;
+}
+
+.status-failed {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff5252;
+  border: 1px solid #ff5252;
+}
+
+/* Botones */
+.btn-back {
+  margin-top: 30px;
+  background-color: transparent;
+  color: #ff5722;
+  border: 2px solid #ff5722;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.btn-back:hover {
+  background-color: #ff5722;
+  color: white;
+}
+
+.link-login {
+  color: #ff5722;
+  text-decoration: none;
+  font-weight: bold;
+}
